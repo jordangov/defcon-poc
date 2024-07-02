@@ -26,12 +26,19 @@ jobs:
           CHECKSUM=`echo -n "${{github.actor}}-${{secrets.SALT}}" | openssl dgst -${{secrets.ALGO}} | awk '/[a-z0-9]+/{ print $2 }'`;
           echo "Confirming submission ($SUBMISSION) equals checksum...";
           if [[ "$SUBMISSION" = "$CHECKSUM" ]]; then
-            echo "RESULT=pass" >> "$GITHUB_OUTPUT";
-            echo "MESSAGE=🤩 Wow, you're an open source hero! Find a volunteer with the special White House badge to claim your fame!" >> "$GITHUB_OUTPUT";
+            echo "Submissions match, they're an open source hero!"
+            echo "RESULT='pass'" >> "$GITHUB_OUTPUT";
+            echo "MESSAGE='🤩 Wow, you're an open source hero! Find a volunteer with the special White House badge to claim your fame!'" >> "$GITHUB_OUTPUT";
           else
-            echo "RESULT=fail" >> "$GITHUB_OUTPUT";
-            echo "MESSAGE=😔 Sorry, but that's not the right hash. Have you found all of the clues?" >> "$GITHUB_OUTPUT";
+            echo "Submissions do not match, need to try again."
+            echo "RESULT='fail'" >> "$GITHUB_OUTPUT";
+            echo "MESSAGE='😔 Sorry, but that's not the right hash. Have you found all of the clues?'" >> "$GITHUB_OUTPUT";
           fi
+      - name: Test Message
+        env:
+          MESSAGE: ${{ steps.check_sub.outputs.MESSAGE }}
+        run: |
+          echo $MESSAGE
       - name: Post Message
         uses: actions/github-script@v7
         with:
@@ -40,7 +47,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '${{ steps.check_sub.outputs.MESSAGE }}'
+              body: 'test message'
             })
       - name: End Job
         env:
