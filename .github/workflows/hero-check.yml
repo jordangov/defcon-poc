@@ -34,11 +34,6 @@ jobs:
             echo "RESULT=fail" >> "$GITHUB_OUTPUT";
             echo "MESSAGE='😔 Sorry, but that is not the right hash. Have you found all of the clues?'" >> "$GITHUB_OUTPUT";
           fi
-      - name: Test Message
-        env:
-          MESSAGE: ${{ steps.check_sub.outputs.MESSAGE }}
-        run: |
-          echo $MESSAGE
       - name: Post Message
         uses: actions/github-script@v7
         with:
