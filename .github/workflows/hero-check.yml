@@ -53,7 +53,7 @@ jobs:
         env:
           RESULT: ${{ steps.check_sub.outputs.RESULT }}
         run: >-
-          echo "RESULT=$RESULT"
+          echo "RESULT=$RESULT";
           if [[ "$RESULT" = "pass" ]]; then
             exit 0;
           else
