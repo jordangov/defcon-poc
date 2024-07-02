@@ -1,6 +1,6 @@
-# Open Source Heros
+# Open Source Heroes
 
-This is the list of heros. Add your name to the list below with your GitHub handle and the correct hash.
+This is the list of heroes. Add your name to the list below with your GitHub handle and the correct hash.
 
 > **INSTRUCTIONS**: You must open a Pull Request to this repository, correctly adding your name to the list below along with the correct hash per the hints you have found elsewhere during DEF CON 32.  
 >   
