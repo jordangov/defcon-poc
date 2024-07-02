@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
       - name: Run script
         run: |
-          SUBMISSION=`git diff main | awk '/${{github.actor}}/{ print $3 }'`
+          SUBMISSION=`git checkout HEAD > /dev/null && git diff main | awk '/\* @${{github.actor}}/{ print $3 }'`
           CHECKSUM=`echo -n "${{github.actor}}-${{secrets.SALT}}" | openssl dgst -${{secrets.ALGO}}`
           echo "Confirming submission: $SUBMISSION"
           echo "      equals checksum: $CHECKSUM"
