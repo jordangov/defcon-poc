@@ -15,7 +15,7 @@ jobs:
           repository: jordangov/defcon-poc
           # token needss to be able read repo contents, write to PRs, and read secrets
           token: ${{secrets.GH_TOKEN}}
-          # fetch-depth: 0
+          fetch-depth: 0
       - name: Run script
         run: |
           SUBMISSION=`git diff main | awk '/${{github.actor}}/{ print $3 }'`
