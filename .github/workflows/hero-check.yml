@@ -11,6 +11,11 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          repository: jordangov/defcon-poc
+          # token needss to be able read repo contents, write to PRs, and read secrets
+          token: ${{secrets.GH_TOKEN}}
       - name: Run script
         run: |
+          echo "user: ${{github.actor}}"
           echo -n "${{github.actor}}-${{secrets.SALT}}" | openssl dgst -${{secrets.ALGO}}
