@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test:
+  check for hero:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -20,9 +20,8 @@ jobs:
         run: >-
           git fetch origin main;
           SUBMISSION=`git diff origin/main..HEAD open-source-heros.md | awk '/\* @${{github.actor}}/{ print $3 }'`;
-          echo -n "${{github.actor}}-${{secrets.SALT}}" | openssl dgst -${{secrets.ALGO}} -out c.txt;
-          cat c.txt;
-          CHECKSUM=`echo -n "${{github.actor}}-${{secrets.SALT}}" | openssl dgst -${{secrets.ALGO}} -out c.txt && cat c.txt;`;
+          echo -n "${{github.actor}}-${{secrets.SALT}}" | openssl dgst -${{secrets.ALGO}};
+          CHECKSUM=`echo -n "${{github.actor}}-${{secrets.SALT}}" | openssl dgst -${{secrets.ALGO}} | awk '/[a-z0-9]+/{ print $2 }'`;
           echo "Confirming submission ($SUBMISSION) equals checksum ($CHECKSUM)...";
           if [[ "$SUBMISSION" = "$CHECKSUM" ]]; then
             echo "You are an open source hero!";
