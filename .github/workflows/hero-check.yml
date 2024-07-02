@@ -10,23 +10,40 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
         with:
           repository: jordangov/defcon-poc
           # token needss to be able read repo contents, write to PRs, and read secrets
           token: ${{secrets.GH_TOKEN}}
           fetch-depth: 0
-      - name: Run script
+      - name: Check Submission
+        id: check_sub
         run: >-
           git fetch origin main;
           SUBMISSION=`git diff origin/main..HEAD open-source-heros.md | awk '/\* @${{github.actor}}/{ print $3 }'`;
           echo -n "${{github.actor}}-${{secrets.SALT}}" | openssl dgst -${{secrets.ALGO}};
           CHECKSUM=`echo -n "${{github.actor}}-${{secrets.SALT}}" | openssl dgst -${{secrets.ALGO}} | awk '/[a-z0-9]+/{ print $2 }'`;
-          echo "Confirming submission ($SUBMISSION) equals checksum ($CHECKSUM)...";
+          echo "Confirming submission ($SUBMISSION) equals checksum...";
           if [[ "$SUBMISSION" = "$CHECKSUM" ]]; then
-            echo "You are an open source hero!";
-            exit 0;
+            echo "RESULT=pass" >> "$GITHUB_OUTPUT";
+            echo "MESSAGE=🤩 Wow, you're an open source hero! Find a volunteer with the special White House badge to claim your fame!" >> "$GITHUB_OUTPUT";
           else
-            echo "Try again!";
-            exit 1;
+            echo "RESULT=fail" >> "$GITHUB_OUTPUT";
+            echo "MESSAGE=😔 Sorry, but that's not the right hash. Have you found all of the clues?" >> "$GITHUB_OUTPUT";
           fi
+      - name: Post Message
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '${{ steps.check_sub.outputs.MESSAGE }}'
+            })
+      - name: End Job
+        env:
+          RESULT: ${{ steps.check_sub.outputs.RESULT }}
+        run: >-
+          if [[ "$RESULT" = "pass" ]]; then exit 0; else exit 1; fi
