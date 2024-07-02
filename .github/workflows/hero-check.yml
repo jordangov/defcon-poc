@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  check for hero:
+  check-for-hero:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
