@@ -30,7 +30,7 @@ jobs:
         run: >-
           SUBMISSION=`(diff target/open-source-heroes.md source/open-source-heroes.md || true) | awk '/\* @${{github.actor}}/{ print $4 }'`;
           CHECK=`echo -n "${{github.actor}}-${{secrets.SALT}}" | openssl dgst -${{secrets.ALGO}} | awk '/[a-z0-9]+/{ print $2 }'`;
-          echo "Confirming submission ($SUBMISSION) equals check ($CHECK)...";
+          echo "Confirming submission ($SUBMISSION) equals check...";
 
           if [[ "$SUBMISSION" = "$CHECK" ]]; then
             echo "Submissions match"
