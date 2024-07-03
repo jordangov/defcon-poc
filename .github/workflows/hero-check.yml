@@ -3,26 +3,35 @@ name: Hero Check
 on:
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'open-source-heroes.md'
 
 jobs:
   check-for-hero:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+
     steps:
-      - name: Checkout Code
+      - name: Checkout Target
         uses: actions/checkout@v4
         with:
           repository: jordangov/defcon-poc
-          # token needss to be able read repo contents, write to PRs, and read secrets
-          token: ${{secrets.GH_TOKEN}}
-          fetch-depth: 0
+          ref: main
+          path: target
+
+      - name: Checkout Source
+        uses: actions/checkout@v4
+        with:
+          path: source
+
       - name: Check Submission
         id: check_sub
         run: >-
-          git fetch origin main;
-          SUBMISSION=`git diff origin/main..HEAD open-source-heroes.md | awk '/\* @${{github.actor}}/{ print $3 }'`;
-          echo -n "${{github.actor}}-${{secrets.SALT}}" | openssl dgst -${{secrets.ALGO}};
+          pwd;
+          ls -l;
+          cd ..;
+          SUBMISSION=`diff target/open-source-heroes.md source/open-source-heroes.md | awk '/\* @${{github.actor}}/{ print $4 }'`;
           CHECKSUM=`echo -n "${{github.actor}}-${{secrets.SALT}}" | openssl dgst -${{secrets.ALGO}} | awk '/[a-z0-9]+/{ print $2 }'`;
           echo "Confirming submission ($SUBMISSION) equals checksum...";
           if [[ "$SUBMISSION" = "$CHECKSUM" ]]; then
