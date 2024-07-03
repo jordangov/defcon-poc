@@ -30,10 +30,12 @@ jobs:
         run: >-
           pwd;
           ls -l;
-          cd ..;
+          diff target/open-source-heroes.md source/open-source-heroes.md;
+
           SUBMISSION=`diff target/open-source-heroes.md source/open-source-heroes.md | awk '/\* @${{github.actor}}/{ print $4 }'`;
           CHECKSUM=`echo -n "${{github.actor}}-${{secrets.SALT}}" | openssl dgst -${{secrets.ALGO}} | awk '/[a-z0-9]+/{ print $2 }'`;
           echo "Confirming submission ($SUBMISSION) equals checksum...";
+          
           if [[ "$SUBMISSION" = "$CHECKSUM" ]]; then
             echo "Submissions match, they're an open source hero!"
             echo "RESULT=pass" >> "$GITHUB_OUTPUT";
