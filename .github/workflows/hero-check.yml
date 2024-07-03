@@ -40,9 +40,6 @@ jobs:
             echo "Submissions do not match"
             echo "RESULT=fail" >> "$GITHUB_OUTPUT";
             echo "MESSAGE='😔 Sorry, but that is not the right hash. Have you found all of the clues?'" >> "$GITHUB_OUTPUT";
-
-            echo "The diff:";
-            diff target/open-source-heroes.md source/open-source-heroes.md;
           fi
       
       - name: Post Message
