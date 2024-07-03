@@ -14,3 +14,4 @@ Fork this repository, add your name to the list below (**along with the correct 
 ## The List
 
 * @whitehouse 7e2aac5579f5e3fb61c2ba63f95cfb7a87cb3da8
+* @daneallen 3ea9659b9a58c9a1f7290ef26b7710ddf14b0947
