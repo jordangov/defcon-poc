@@ -12,4 +12,5 @@ This is the list of heroes. Add your name to the list below with your GitHub han
 ## The List
 
 * @whitehouse 7e2aac5579f5e3fb61c2ba63f95cfb7a87cb3da8
-* @jordangov 6119660cad1e64ddc93cde48e2d617e3cc00071ezzz
+* @jordangov 6119660cad1e64ddc93cde48e2d617e3cc00071e
+* @daneallen 3ea9659b9a58c9a1f7290ef26b7710ddf14b0947
