@@ -29,10 +29,10 @@ jobs:
         id: check_sub
         run: >-
           SUBMISSION=`diff target/open-source-heroes.md source/open-source-heroes.md | awk '/\* @${{github.actor}}/{ print $4 }'`;
-          CHECKSUM=`echo -n "${{github.actor}}-${{secrets.SALT}}" | openssl dgst -${{secrets.ALGO}} | awk '/[a-z0-9]+/{ print $2 }'`;
-          echo "Confirming submission ($SUBMISSION) equals checksum...";
+          CHECK=`echo -n "${{github.actor}}-${{secrets.SALT}}" | openssl dgst -${{secrets.ALGO}} | awk '/[a-z0-9]+/{ print $2 }'`;
+          echo "Confirming submission ($SUBMISSION) equals check ($CHECK)...";
 
-          if [[ "$SUBMISSION" = "$CHECKSUM" ]]; then
+          if [[ "$SUBMISSION" = "$CHECK" ]]; then
             echo "Submissions match"
             echo "RESULT=pass" >> "$GITHUB_OUTPUT";
             echo "MESSAGE='🤩 Wow, you are an open source hero! Find a volunteer with the special White House badge to claim your fame!'" >> "$GITHUB_OUTPUT";
@@ -40,6 +40,9 @@ jobs:
             echo "Submissions do not match"
             echo "RESULT=fail" >> "$GITHUB_OUTPUT";
             echo "MESSAGE='😔 Sorry, but that is not the right hash. Have you found all of the clues?'" >> "$GITHUB_OUTPUT";
+
+            echo "The diff:";
+            diff target/open-source-heroes.md source/open-source-heroes.md;
           fi
       
       - name: Post Message
