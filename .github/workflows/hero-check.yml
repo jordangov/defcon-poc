@@ -1,7 +1,7 @@
 name: Hero Check
 
 on:
-  pull_request:
+  pull_request_target:
     branches: [ "main" ]
     paths:
       - 'open-source-heroes.md'
@@ -10,7 +10,7 @@ jobs:
   check-for-hero:
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write
+      issues: write
 
     steps:
       - name: Checkout Target
@@ -27,12 +27,9 @@ jobs:
 
       - name: Check Submission
         id: check_sub
-        env:
-          SALT: ${{ secrets.SALT }}
-          ALGO: ${{ secrets.ALGO }}
         run: >-
           SUBMISSION=`(diff target/open-source-heroes.md source/open-source-heroes.md || true) | awk '/\* @${{github.actor}}/{ print $4 }'`;
-          CHECK=`echo -n "${{github.actor}}-$SALT" | openssl dgst -$ALGO | awk '/[a-z0-9]+/{ print $2 }'`;
+          CHECK=`echo -n "${{github.actor}}-${{ secrets.SALT }}" | openssl dgst -${{ secrets.ALGO }} | awk '/[a-z0-9]+/{ print $2 }'`;
           echo "Confirming submission ($SUBMISSION) for ${{github.actor}} equals check ($CHECK) from SALT ($SALT) and ALGO ($ALGO)...";
 
           if [[ "$SUBMISSION" = "$CHECK" ]]; then
