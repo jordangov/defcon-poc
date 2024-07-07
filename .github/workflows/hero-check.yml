@@ -23,6 +23,8 @@ jobs:
       - name: Checkout Source
         uses: actions/checkout@v4
         with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
           path: source
 
       - name: Check Submission
@@ -32,6 +34,9 @@ jobs:
           ls -l;
           cat source/open-source-heroes.md;
           cat target/open-source-heroes.md;
+
+          echo "repository? ${{ github.event.pull_request.head.repo.full_name }} or ${{ github.event.pull_request.base.repo.full_name }} or ${{ github.event.pull_request.repository }}";
+          echo "ref? ${{ github.event.pull_request.head.ref }} or ${{ github.event.pull_request.base.ref }}";
           
           diff target/open-source-heroes.md source/open-source-heroes.md || true;
 
