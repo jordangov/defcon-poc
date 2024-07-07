@@ -11,12 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+      pull-requests: write
 
     steps:
       - name: Checkout Target
         uses: actions/checkout@v4
         with:
-          repository: jordangov/defcon-poc
+          repository: ${{ github.event.pull_request.base.repo.full_name }}
           ref: main
           path: target
 
@@ -30,16 +31,7 @@ jobs:
       - name: Check Submission
         id: check_sub
         run: >-
-          pwd;
-          ls -l;
-          cat source/open-source-heroes.md;
-          cat target/open-source-heroes.md;
-
-          echo "repository? ${{ github.event.pull_request.head.repo.full_name }} or ${{ github.event.pull_request.base.repo.full_name }} or ${{ github.event.pull_request.repository }}";
-          echo "ref? ${{ github.event.pull_request.head.ref }} or ${{ github.event.pull_request.base.ref }}";
-          
-          diff target/open-source-heroes.md source/open-source-heroes.md || true;
-
+          echo "Checking diff from ${{ github.event.pull_request.head.ref }} on ${{ github.event.pull_request.head.repo.full_name }}..."
           SUBMISSION=`(diff target/open-source-heroes.md source/open-source-heroes.md || true) | awk '/\* @${{github.actor}}/{ print $4 }'`;
           CHECK=`echo -n "${{github.actor}}-${{ secrets.SALT }}" | openssl dgst -${{ secrets.ALGO }} | awk '/[a-z0-9]+/{ print $2 }'`;
           echo "Confirming submission ($SUBMISSION) for ${{github.actor}} equals check ($CHECK)...";
