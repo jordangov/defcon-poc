@@ -11,26 +11,30 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
+      pull-requests: write
 
     steps:
       - name: Checkout Target
         uses: actions/checkout@v4
         with:
-          repository: jordangov/defcon-poc
+          repository: ${{ github.event.pull_request.base.repo.full_name }}
           ref: main
           path: target
 
       - name: Checkout Source
         uses: actions/checkout@v4
         with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
           path: source
 
       - name: Check Submission
         id: check_sub
         run: >-
+          echo "Checking diff from ${{ github.event.pull_request.head.ref }} on ${{ github.event.pull_request.head.repo.full_name }}...";
           SUBMISSION=`(diff target/open-source-heroes.md source/open-source-heroes.md || true) | awk '/\* @${{github.actor}}/{ print $4 }'`;
           CHECK=`echo -n "${{github.actor}}-${{ secrets.SALT }}" | openssl dgst -${{ secrets.ALGO }} | awk '/[a-z0-9]+/{ print $2 }'`;
-          echo "Confirming submission ($SUBMISSION) for ${{github.actor}} equals check ($CHECK) from SALT ($SALT) and ALGO ($ALGO)...";
+          echo "Confirming submission ($SUBMISSION) for ${{github.actor}} equals check...";
 
           if [[ "$SUBMISSION" = "$CHECK" ]]; then
             echo "Submissions match"
