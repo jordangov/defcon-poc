@@ -32,9 +32,9 @@ jobs:
         id: check_sub
         run: >-
           echo "Checking diff from ${{ github.event.pull_request.head.ref }} on ${{ github.event.pull_request.head.repo.full_name }}...";
-          SUBMISSION=`(diff target/open-source-heroes.md source/open-source-heroes.md || true) | awk '/\* @${{github.actor}}/{ print $4 }'`;
-          CHECK=`echo -n "${{github.actor}}-${{ secrets.SALT }}" | openssl dgst -${{ secrets.ALGO }} | awk '/[a-z0-9]+/{ print $2 }'`;
-          echo "Confirming submission ($SUBMISSION) for ${{github.actor}} equals check...";
+          SUBMISSION=`(diff target/open-source-heroes.md source/open-source-heroes.md || true) | awk '/\* @${{ github.event.pull_request.user.login }}/{ print $4 }'`;
+          CHECK=`echo -n "${{ github.event.pull_request.user.login }}-${{ secrets.SALT }}" | openssl dgst -${{ secrets.ALGO }} | awk '/[a-z0-9]+/{ print $2 }'`;
+          echo "Confirming submission ($SUBMISSION) for ${{ github.event.pull_request.user.login }} equals check...";
 
           if [[ "$SUBMISSION" = "$CHECK" ]]; then
             echo "Submissions match"
