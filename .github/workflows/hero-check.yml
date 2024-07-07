@@ -28,9 +28,16 @@ jobs:
       - name: Check Submission
         id: check_sub
         run: >-
+          pwd;
+          ls -l;
+          cat source/open-source-heroes.md;
+          cat target/open-source-heroes.md;
+          
+          diff target/open-source-heroes.md source/open-source-heroes.md || true;
+
           SUBMISSION=`(diff target/open-source-heroes.md source/open-source-heroes.md || true) | awk '/\* @${{github.actor}}/{ print $4 }'`;
           CHECK=`echo -n "${{github.actor}}-${{ secrets.SALT }}" | openssl dgst -${{ secrets.ALGO }} | awk '/[a-z0-9]+/{ print $2 }'`;
-          echo "Confirming submission ($SUBMISSION) for ${{github.actor}} equals check ($CHECK) from SALT ($SALT) and ALGO ($ALGO)...";
+          echo "Confirming submission ($SUBMISSION) for ${{github.actor}} equals check ($CHECK)...";
 
           if [[ "$SUBMISSION" = "$CHECK" ]]; then
             echo "Submissions match"
