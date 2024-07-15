@@ -1,5 +1,5 @@
-# DEF CON 32 Open Source Heroes
+# DEF CON 32 - Open Source @ ONCD
 
-> This repo is a **proof of concept** for the Open Source Hero Badge at DEF CON 32.
+> This repo is a **proof of concept** for the Open Source Badge at DEF CON 32.
 >   
-> Check out the [open-source-heroes.md](open-source-heroes.md) file for instructions.
+> Check out the [plank-holders.md](plank-holders.md) file for instructions.
