@@ -31,16 +31,17 @@ jobs:
       - name: Check Submission
         id: check_submission
         run: >-
-          HASH_INPUT="${{ github.event.pull_request.user.login }}-${{ secrets.SALT1 }}-${{ secrets.SALT2 }}"
+          HASH_INPUT="${{ github.event.pull_request.user.login }}-${{ secrets.SALT1 }}-${{ secrets.SALT2 }}";
           echo "Checking diff from ${{ github.event.pull_request.head.ref }} on ${{ github.event.pull_request.head.repo.full_name }}...";
           SUBMISSION=`(diff target/plank-holders.md source/plank-holders.md || true) | awk '/\* @${{ github.event.pull_request.user.login }}/{ print $4 }'`;
           CHECK=`echo -n "$HASH_INPUT" | openssl dgst -${{ secrets.ALGO }} | awk '/[a-z0-9]+/{ print $2 }'`;
-          RAW=`echo -n "$HASH_INPUT" | openssl dgst -${{ secrets.ALGO }}`
+          RAW=`echo -n "$HASH_INPUT" | openssl dgst -${{ secrets.ALGO }}`;
           
           if [[ "$SUBMISSION" =~ ^[a-zA-Z0-9]+$ ]]; then
             echo "Confirming submission ($SUBMISSION) for ${{ github.event.pull_request.user.login }} equals check...";
             echo "Check: $CHECK";
-            echo "Raw: $RAW"
+            echo "Raw: $RAW";
+
             if [[ "$SUBMISSION" = "$CHECK" ]]; then
               echo "Submission match"
               echo "RESULT=pass" >> "$GITHUB_OUTPUT";
